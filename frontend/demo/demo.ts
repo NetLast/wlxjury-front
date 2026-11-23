@@ -47,7 +47,9 @@ document.getElementById('page')!.innerHTML = `
   data-vote-worst="Найгірша оцінка" data-vote-clear="Зняти оцінку" data-vote-failed="Не вдалося зберегти ваш голос."
   data-vote-reference="Код: {0}" data-comments-open="{0}: відкрити коментарі" data-vote-login-url="">
   <div id="gallery" class="gallery" style="display:none;" data-island
-    data-label-author="Автор" data-label-monument="Пам’ятка: {0}"
+    data-label-author="Автор" data-label-monument="Пам’ятка: {0}" data-label-close="Закрити"
+    data-label-previous="Попереднє зображення" data-label-next="Наступне зображення" data-label-file-info="Про файл"
+    data-label-commons="Відкрити на Commons"
     data-jury="${!org}" data-binary="${!rated}" ${stars ? `data-stars="${stars}"` : ''}>
 ${tiles}
   </div>

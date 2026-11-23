@@ -28,6 +28,8 @@ export interface Tile {
   roundId: string
   title: string
   src: string
+  /** the large view's picture (data-image), for the enlarged photo */
+  large: string
   srcSet: { src: string; width: number; height: number }[]
   width: number
   height: number
@@ -54,6 +56,12 @@ export interface Texts {
   author: string
   /** "Monument: {0}" */
   monument: string
+  close: string
+  previous: string
+  next: string
+  /** the link to the large view page (comments, criteria, keyboard) */
+  fileInfo: string
+  commons: string
 }
 
 function json<T>(el: Element, name: string): T | null {
@@ -86,7 +94,12 @@ export function readTexts(gallery: Element, holder: Element | null): Texts {
     worst: from(holder, 'data-vote-worst'),
     clear: from(holder, 'data-vote-clear'),
     author: from(gallery, 'data-label-author'),
-    monument: from(gallery, 'data-label-monument') || '{0}'
+    monument: from(gallery, 'data-label-monument') || '{0}',
+    close: from(gallery, 'data-label-close'),
+    previous: from(gallery, 'data-label-previous'),
+    next: from(gallery, 'data-label-next'),
+    fileInfo: from(gallery, 'data-label-file-info'),
+    commons: from(gallery, 'data-label-commons')
   }
 }
 
@@ -134,6 +147,7 @@ export function readTiles(gallery: Element): Tile[] {
       roundId: img.getAttribute('data-roundId') ?? img.getAttribute('data-roundid') ?? '',
       title: titleOf(img),
       src: img.getAttribute('src') ?? '',
+      large: img.getAttribute('data-image') || img.getAttribute('src') || '',
       srcSet: sourcesOf(img, width, height),
       width,
       height,
@@ -150,3 +164,7 @@ export function readTiles(gallery: Element): Tile[] {
     }
   })
 }
+
+/** The file's page on Commons. */
+export const commonsUrl = (title: string): string =>
+  `https://commons.wikimedia.org/wiki/${encodeURIComponent(title.replace(/ /g, '_')).replace(/%3A/gi, ':')}`

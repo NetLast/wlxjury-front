@@ -1,5 +1,5 @@
 import { page } from './fixture'
-import { readSetup, readTexts, readTiles, sourcesOf } from './tiles'
+import { commonsUrl, readSetup, readTexts, readTiles, sourcesOf } from './tiles'
 
 describe('reading the page', () => {
   it('reads the files from the server-rendered images', () => {
@@ -36,5 +36,11 @@ describe('reading the page', () => {
     img.setAttribute('src', '/t/100px-x.jpg')
     img.setAttribute('srcset', '/t/100px-x.jpg 1.5x, , /t/200px-x.jpg 2x')
     expect(sourcesOf(img, 1000, 500).map((s) => s.width)).toEqual([100, 200])
+  })
+  it('reads the large picture and builds the Commons link', () => {
+    const [a, b] = readTiles(page())
+    expect(a.large).toBe('/w/thumb/a/ab/A.jpg/1280px-A.jpg')
+    expect(b.large).toBe('/w/c/B.jpg') // no data-image: the thumbnail
+    expect(commonsUrl('File:Café 1.jpg')).toBe('https://commons.wikimedia.org/wiki/File:Caf%C3%A9_1.jpg')
   })
 })

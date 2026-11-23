@@ -191,7 +191,9 @@ changes after the API is prepared; the patched copy stays until then
 `snippets/galleryIsland.scala.html`; `gallery-init.js` leaves a `#gallery[data-island]` to it, and
 `?tiles=classic` brings the old tiles back for comparison. The island reads only what the page
 renders (no API): the server keeps deciding what a viewer sees, e.g. a file's author and
-description only for `canViewOrgInfo` (secure-coding §22), the monument for everyone. Its texts
+description only for `canViewOrgInfo` (secure-coding §22), the monument for everyone. The tiles
+carry no text; a click enlarges the photo on the page with that information, the votes and links
+to the large view page and Commons. Its texts
 come from the page (§1.1); its own guard test (`frontend/src/guard.test.ts`) keeps §2.1 and
 secure-coding §8 for its source, as the bundle sits outside `public/javascripts/`. The built files
 are committed with the source change (`npm run build`). contestFiles and the vote-time order still

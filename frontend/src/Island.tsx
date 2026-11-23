@@ -1,9 +1,9 @@
 import { useCallback, useRef, useState } from 'react'
 import { RowsPhotoAlbum, type Photo } from 'react-photo-album'
 import 'react-photo-album/rows.css'
-import Caption from './Caption'
 import TileImage from './TileImage'
 import VoteBar from './VoteBar'
+import Viewer from './Viewer'
 import { sendVote } from './votes'
 import type { GallerySetup, Texts, Tile } from './tiles'
 
@@ -31,6 +31,7 @@ export default function Island({ tiles, setup, texts, lang, rowHeight = 200 }: P
   const [rates, setRates] = useState<Record<string, number>>(() => Object.fromEntries(tiles.map((t) => [t.pageId, t.rate])))
   const [busy, setBusy] = useState<Record<string, boolean>>({})
   const pending = useRef(new Set<string>())
+  const [open, setOpen] = useState<number | null>(null)
 
   const rate = useCallback(async (tile: Tile, value: number) => {
     // one vote at a time per file, so they are stored in the order shown (tile-votes.js)
@@ -60,6 +61,7 @@ export default function Island({ tiles, setup, texts, lang, rowHeight = 200 }: P
   }))
 
   return (
+    <>
     <RowsPhotoAlbum
       photos={photos}
       targetRowHeight={rowHeight}
@@ -68,15 +70,21 @@ export default function Island({ tiles, setup, texts, lang, rowHeight = 200 }: P
       componentsProps={{ image: { loading: 'lazy', decoding: 'async' } }}
       render={{
         image: (props) => <TileImage {...props} />,
-        extras: (_, { photo }) => {
+        extras: (_, { photo, index }) => {
           const t = photo.tile
           const r = rates[t.pageId] ?? 0
           const mark = setup.jury ? null : markOf(setup, r)
           return (
             <>
-              {/* the tile opens the large view (a link of its own: the votes are beside it, not inside it) */}
-              {t.largeUrl && <a className="wlx-island-open" href={t.largeUrl} aria-label={t.title.replace(/^File:/, '')} />}
-              <Caption tile={t} texts={texts} lang={lang} />
+              {/* the tile enlarges the photo on the page; the link still goes to the large view
+                  page for a new tab (a link of its own: the votes are beside it, not inside it) */}
+              <a className="wlx-island-open" href={t.largeUrl || '#'} aria-label={t.title.replace(/^File:/, '')}
+                title={t.title.replace(/^File:/, '')}
+                onClick={(e) => {
+                  if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return
+                  e.preventDefault()
+                  setOpen(index)
+                }} />
               {/* the tile's foot: the chips' row above the votes, so the two never overlap however the stars wrap */}
               <div className="wlx-island-foot">
               <div className="wlx-island-chips">
@@ -98,5 +106,10 @@ export default function Island({ tiles, setup, texts, lang, rowHeight = 200 }: P
         }
       }}
     />
+    {open !== null && (
+      <Viewer tiles={tiles} index={open} setup={setup} texts={texts} lang={lang} rates={rates} busy={busy}
+        onIndex={setOpen} onClose={() => setOpen(null)} onRate={rate} />
+    )}
+    </>
   )
 }

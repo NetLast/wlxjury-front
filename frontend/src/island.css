@@ -6,19 +6,21 @@
 .wlx-island-open { position: absolute; inset: 0; z-index: 0; }
 .wlx-island-open:focus-visible { outline: 3px solid var(--bs-focus-ring-color, #36c); outline-offset: -3px; }
 
-.wlx-island-caption {
-  position: absolute; inset: 0 0 auto 0; z-index: 1; padding: 4px 8px 14px; pointer-events: none;
-  color: #fff; font-size: .8rem; line-height: 1.25; text-shadow: 0 1px 2px rgb(0 0 0 / .8);
-  background: linear-gradient(rgb(0 0 0 / .7), rgb(0 0 0 / .35) 70%, transparent);
+/* the enlarged photo (yet-another-react-lightbox): the panel under the picture */
+.wlx-island-viewer .yarl__slide { flex-direction: column; }
+.wlx-island-panel {
+  position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-wrap: wrap; align-items: flex-end;
+  justify-content: space-between; gap: 8px 16px; padding: 10px 16px 12px; color: #fff;
+  max-height: 132px; overflow: auto;
 }
-.wlx-island-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.wlx-island-desc, .wlx-island-meta {
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
-}
-.wlx-island-meta { -webkit-line-clamp: 1; line-clamp: 1; opacity: .9; }
-/* the whole description while the tile is pointed at or holds the focus */
-.wlx-island .react-photo-album--photo:is(:hover, :focus-within) .wlx-island-caption { bottom: 0; background: rgb(0 0 0 / .72); }
-.wlx-island .react-photo-album--photo:is(:hover, :focus-within) :is(.wlx-island-desc, .wlx-island-meta) { -webkit-line-clamp: unset; line-clamp: unset; }
+.wlx-island-caption { flex: 1 1 320px; max-width: 900px; font-size: .9rem; line-height: 1.35; }
+.wlx-island-title { font-weight: 600; font-size: 1rem; }
+.wlx-island-desc { max-height: 7.5em; overflow: auto; margin-top: 2px; }
+.wlx-island-meta { opacity: .85; margin-top: 2px; }
+.wlx-island-links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 6px; }
+.wlx-island-links a { color: #9ec5fe; text-decoration: none; }
+.wlx-island-links a:hover, .wlx-island-links a:focus-visible { text-decoration: underline; }
+.wlx-island-panel .wlx-island-votes { opacity: 1; border-radius: 6px; font-size: 1.25rem; }
 
 .wlx-island-foot {
   position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; flex-direction: column;

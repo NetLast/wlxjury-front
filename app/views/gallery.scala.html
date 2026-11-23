@@ -35,9 +35,12 @@
 
             @* data-island: the React tiles (frontend/, public/gallery-island/) take the gallery over
                from unitegallery (gallery-init.js leaves it alone; ?tiles=classic keeps the old
-               tiles); they read the <img> elements below and the labels here *@
+               tiles); they read the <img> elements below and the labels here, which name the
+               enlarged photo's buttons and links *@
             <div id="gallery" class="gallery mw-gallery-traditional" style="display:none;" @views.GalleryTiles.attributes(user, list.asUserId, Some(list.round))
-                 data-island data-label-author="@Messages("author")" data-label-monument="@Messages("monument.filter.chip", "{0}")">
+                 data-island data-label-author="@Messages("author")" data-label-monument="@Messages("monument.filter.chip", "{0}")"
+                 data-label-close="@Messages("close")" data-label-previous="@Messages("previous.image")" data-label-next="@Messages("next.image")"
+                 data-label-file-info="@Messages("large.file.info")" data-label-commons="@Messages("files.open.on.commons")">
 
                     @for((file, index) <- pageFiles.view.zipWithIndex) {
                         @* unitegallery shows `alt` (the caption) and `data-description` with jQuery's
@@ -56,8 +59,8 @@
                         data-roundId="@roundId"
                         data-rate="@file.rate"
                         data-largeUrl="@list.largeUrl(file.pageId)"
-                        @* the card's description (the island): the monument, which names no one, for
-                           everyone; the author and the description (which may name them) only for
+                        @* what the enlarged photo says about the file (the island): the monument, which names
+                           no one, for everyone; the author and the description (which may name them) only for
                            those who see the round's organizer views, as fileList's showAuthor and
                            the large view's authorInfo (secure-coding.md §22) *@
                         data-monument-id="@file.image.monumentId.getOrElse("")"

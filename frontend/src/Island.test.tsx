@@ -27,22 +27,48 @@ describe('the gallery island', () => {
     expect(classicRequested('?page=2')).toBe(false)
   })
 
-  it('opens the large view by the tile link, with the description on the card', async () => {
-    const island = await start()
-    const link = within(island).getByRole('link', { name: 'A b.jpg' })
-    expect(link).toHaveAttribute('href', '/large/round/7/user/2/pageid/11')
-    // a juror: the monument, never an author or a description
-    expect(within(island).getByText('Monument: 46-101-0001')).toBeInTheDocument()
-    expect(within(island).queryByText(/Author/)).not.toBeInTheDocument()
+  it('keeps the card clean: no description on the tile', async () => {
+    const island = await start({ jury: false, org: true })
+    expect(within(island).queryByText('Old church')).not.toBeInTheDocument()
+    expect(within(island).queryByText(/Monument:/)).not.toBeInTheDocument()
     expect(within(island).getByLabelText('two: open the comments')).toBeInTheDocument()
   })
 
-  it('shows an organizer the description as text and the author', async () => {
+  it('enlarges the photo on a click, with the juror\'s info, votes and links', async () => {
+    fetchMock.mockResolvedValue({ ok: true, status: 200 })
+    const island = await start()
+    const link = within(island).getByRole('link', { name: 'A b.jpg' })
+    // a new tab still gets the large view page
+    expect(link).toHaveAttribute('href', '/large/round/7/user/2/pageid/11')
+    fireEvent.click(link)
+    const viewer = await screen.findByRole('dialog')
+    // a juror: the monument and the size, never an author or a description
+    expect(within(viewer).getAllByText('Monument: 46-101-0001 · 1500 × 1000').length).toBeGreaterThan(0)
+    expect(within(viewer).queryByText(/Author/)).not.toBeInTheDocument()
+    // (the lightbox also renders the neighbouring slide: look for this file's links among them)
+    const hrefs = (name: RegExp) => within(viewer).getAllByRole('link', { name }).map((a) => a.getAttribute('href'))
+    expect(hrefs(/File details/)).toContain('/large/round/7/user/2/pageid/11')
+    expect(hrefs(/Open on Commons/)).toContain('https://commons.wikimedia.org/wiki/File:A_b.jpg')
+    expect(within(viewer).getAllByRole('button', { name: 'Close' }).length).toBeGreaterThan(0)
+    // the votes in the enlarged view
+    const panel = within(viewer).getAllByText('A b.jpg').map((el) => el.closest('.wlx-island-panel') as HTMLElement)[0]
+    fireEvent.click(within(panel).getByRole('button', { name: 'Selected' }))
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/rate/round/7/pageid/11/select/1', expect.anything()))
+  })
+
+  it('shows an organizer the description as text and the author in the enlarged photo', async () => {
     const island = await start({ jury: false, org: true })
-    expect(within(island).getByText('Old church')).toBeInTheDocument()
-    expect(within(island).getByText('Author: Ann · Monument: 46-101-0001')).toBeInTheDocument()
-    // no votes for a viewer who doesn't vote
-    expect(within(island).queryByRole('button', { name: 'Selected' })).not.toBeInTheDocument()
+    fireEvent.click(within(island).getByRole('link', { name: 'A b.jpg' }))
+    const viewer = await screen.findByRole('dialog')
+    expect(within(viewer).getAllByText('Old church').length).toBeGreaterThan(0)
+    expect(within(viewer).getAllByText('Author: Ann · Monument: 46-101-0001 · 1500 × 1000').length).toBeGreaterThan(0)
+    expect(within(viewer).queryByRole('button', { name: 'Selected' })).not.toBeInTheDocument()
+  })
+
+  it('a click with Ctrl (a new tab) goes to the large view page, not the enlarged photo', async () => {
+    const island = await start()
+    fireEvent.click(within(island).getByRole('link', { name: 'A b.jpg' }), { ctrlKey: true })
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('votes in a binary round with the CSRF token, and a second click clears the vote', async () => {

@@ -20,12 +20,14 @@ The app's pages stay Play/Twirl. A React "island" takes over one part of a page;
   It asks the server for nothing, so the server's rules decide who sees what.
 - Justified rows; the thumbnails the page offers (1x, 1.5x, 2x) become a width-described `srcSet`, so each
   tile loads the smallest sharp one.
-- **The card's description** at the top of each tile: the title; for those who see the round's organizer
-  views, the author and the file description (wikitext turned into text); for jurors the monument only
-  (an author's name must not reach a juror, secure-coding §22). Two lines at rest, all of it on hover / focus.
+- **Clean cards:** a tile shows the photo, its chips and (pointed at) the votes; no text on the photo.
+- **The enlarged photo** (a click on a tile; yet-another-react-lightbox): the thumbnails' strip at the side, zoom by
+  wheel / double click / pinch, arrows, and under the picture what the viewer may see: the title and size; for those
+  who see the round's organizer views the author and the file description (wikitext turned into text); for jurors
+  the monument only (an author's name must not reach a juror, secure-coding §22); the votes; links to the large
+  view page ("File details": comments, criteria) and to Commons. Ctrl/middle click on a tile opens the large view page.
 - Votes as `tile-votes.js` sends them (`POST /rate/round/…/select/…` with the `Csrf-Token` header), one at
   a time per file, put back and explained by `vote-errors.js` when refused; ✓ / ✗, stars, half stars, worst mark, clear.
-- A click on the tile opens the existing large view (`data-largeUrl`).
 - Chips: the vote (read-only views), the all-jurors tally of a binary round, the comments count.
 - All texts come from the page (`voteTexts`, `data-label-*`), so the four languages keep working.
 
