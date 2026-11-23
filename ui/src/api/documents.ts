@@ -22,7 +22,7 @@ export const IMAGES = `query Images($roundId: ID!, $userId: ID, $page: Int, $pag
   images(roundId: $roundId, userId: $userId, page: $page, pageSize: $pageSize, rate: $rate, region: $region) {
     totalRate rateSum rank
     selections { rate }
-    image { pageId title url pageUrl width height author mime mpx }
+    image { pageId title url pageUrl width height author monumentId mime mpx }
   }
 }`
 
@@ -42,3 +42,19 @@ export const ROUND_STAT = `query RoundStat($roundId: ID!) {
   roundStat(roundId: $roundId) { roundId totalImages ratedImages
     jurorStats { rated selected user { id fullname } } }
 }`
+
+/** All of a user's votes in a round, tiny (page id + rate): the counts of accepted / rejected / unrated. */
+export const RATE_SUMMARY = `query RateSummary($roundId: ID!, $userId: ID, $pageSize: Int) {
+  images(roundId: $roundId, userId: $userId, page: 1, pageSize: $pageSize) {
+    image { pageId } selections { rate }
+  }
+}`
+
+/**
+ * OPTIONAL: the round's rating scale. The backend's Round type does not expose `rates` / `rejects`
+ * yet (see ui/README.md, "Backend wishes"); the UI falls back to a default scale while this fails.
+ */
+export const ROUND_SCALE = `query RoundScale($id: ID!) { round(id: $id) { rates rejects } }`
+
+/** Documents the backend schema does not have yet: checked against the schema plus the wished fields. */
+export const OPTIONAL_DOCUMENTS = ['ROUND_SCALE']

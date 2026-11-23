@@ -37,6 +37,7 @@ export interface ImageInfo {
   width: number
   height: number
   author?: string | null
+  monumentId?: string | null
   mime?: string | null
   mpx?: number | null
 }

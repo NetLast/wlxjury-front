@@ -12,8 +12,8 @@ export const mockContests: ContestInfo[] = [
   {
     id: '1', name: 'Вікі любить Землю', year: 2024, country: 'Ukraine', campaign: 'wle-ua', currentRound: '11',
     rounds: [
-      { id: '11', number: 1, name: 'Перший тур', contestId: '1', active: true, distribution: 0 },
-      { id: '12', number: 2, name: 'Фінал', contestId: '1', active: false, distribution: 0 }
+      { id: '11', number: 1, name: 'Перший тур (так/ні)', contestId: '1', active: true, distribution: 0 },
+      { id: '12', number: 2, name: 'Фінал (1-10)', contestId: '1', active: true, distribution: 0 }
     ]
   },
   {
@@ -22,12 +22,13 @@ export const mockContests: ContestInfo[] = [
   },
   {
     id: '2', name: 'Вікі любить пам’ятки', year: 2023, country: 'Ukraine', campaign: 'wlm-ua', currentRound: '21',
-    rounds: [{ id: '21', number: 1, name: 'Перший тур', contestId: '2', active: true, distribution: 0 }]
+    rounds: [{ id: '21', number: 1, name: 'Тур 1-5', contestId: '2', active: true, distribution: 0 }]
   }
 ]
 
 const COLORS = ['#2e7d32', '#1565c0', '#6a1b9a', '#ef6c00', '#00838f', '#ad1457', '#4e342e']
 const SIZES: [number, number][] = [[1600, 1067], [1067, 1600], [1600, 900], [1200, 1200], [2400, 1000]]
+const REGION_CODES = ['46', '05', '07', '80', '12', '26', '63']
 const AUTHORS = ['Олена', 'Іван', 'Марія', 'Петро', 'Соломія']
 
 function svg(w: number, h: number, color: string, label: string): string {
@@ -52,6 +53,7 @@ function makeImages(roundId: string, count: number): ImageWithRating[] {
         pageUrl: `https://commons.wikimedia.org/wiki/File:Photo_${i + 1}.jpg`,
         width, height,
         author: AUTHORS[i % AUTHORS.length],
+        monumentId: i % 11 === 0 ? null : `${REGION_CODES[i % REGION_CODES.length]}-101-${String(i).padStart(4, '0')}`,
         mime: 'image/jpeg',
         mpx: Math.round((width * height) / 1e5) / 10
       },
@@ -66,6 +68,14 @@ export const mockImagesByRound: Record<string, ImageWithRating[]> = {
   '12': makeImages('12', 40),
   '21': makeImages('21', 120),
   '31': makeImages('31', 60)
+}
+
+/** Rating scale of each mock round, as the backend's Round.rates / Round.rejects would say. */
+export const mockScales: Record<string, { rates: number; rejects: boolean }> = {
+  '11': { rates: 1, rejects: true },   // yes / no
+  '12': { rates: 10, rejects: true },  // 1-10 with the reject mark
+  '21': { rates: 5, rejects: false },  // 1-5, no reject mark
+  '31': { rates: 3, rejects: true }
 }
 
 export const mockComments: CommentInfo[] = []

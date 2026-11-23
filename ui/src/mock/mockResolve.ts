@@ -1,9 +1,10 @@
-import { mockComments, mockContests, mockImagesByRound, mockUsers } from './mockData'
+import { mockComments, mockContests, mockImagesByRound, mockScales, mockUsers } from './mockData'
 import type { CommentInfo, ImageWithRating } from '../types'
 
 type Vars = Record<string, unknown>
 
-const delay = <T>(v: T) => new Promise<T>((r) => setTimeout(() => r(v), 120))
+// a copy: RTK Query freezes what it stores, and the mock's own data must stay writable
+const delay = <T>(v: T) => new Promise<T>((r) => setTimeout(() => r(structuredClone(v)), 120))
 
 /** Answers the operations of api/documents.ts from memory. */
 export async function mockResolve(operation: string, vars: Vars, userId?: string): Promise<unknown> {
@@ -26,6 +27,12 @@ export async function mockResolve(operation: string, vars: Vars, userId?: string
       const round = mockContests.flatMap((c) => c.rounds).find((r) => r.id === vars.id)
       return delay({ round })
     }
+    case 'RoundScale': {
+      const scale = mockScales[String(vars.id)]
+      if (!scale) throw new Error('not found')
+      return delay({ round: scale })
+    }
+    case 'RateSummary':
     case 'Images': {
       const all = mockImagesByRound[String(vars.roundId)] ?? []
       const mine = (x: ImageWithRating) => (x.selections[0]?.rate ?? 0)

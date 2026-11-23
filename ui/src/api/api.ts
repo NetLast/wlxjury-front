@@ -40,6 +40,15 @@ export const api = createApi({
       transformResponse: (r: { addComment: CommentInfo }) => r.addComment,
       invalidatesTags: (_r, _e, a) => [{ type: 'Comments', id: a.imagePageId }]
     }),
+    roundScale: b.query<{ rates: number; rejects: boolean }, string>({
+      query: (id) => ({ document: D.ROUND_SCALE, variables: { id } }),
+      transformResponse: (r: { round: { rates: number; rejects: boolean } }) => r.round
+    }),
+    rateSummary: b.query<Record<string, number>, { roundId: string; userId: string }>({
+      query: (v) => ({ document: D.RATE_SUMMARY, variables: { ...v, pageSize: 100000 } }),
+      transformResponse: (r: { images: { image: { pageId: string }; selections: { rate: number }[] }[] }) =>
+        Object.fromEntries(r.images.map((x) => [x.image.pageId, x.selections[0]?.rate ?? 0]))
+    }),
     roundStat: b.query<RoundStat, string>({
       query: (roundId) => ({ document: D.ROUND_STAT, variables: { roundId } }),
       transformResponse: (r: { roundStat: RoundStat }) => r.roundStat
@@ -49,5 +58,5 @@ export const api = createApi({
 
 export const {
   useLoginMutation, useContestsQuery, useRoundQuery, useLazyImagesQuery,
-  useRateImageMutation, useCommentsQuery, useAddCommentMutation, useRoundStatQuery
+  useRateImageMutation, useRoundScaleQuery, useRateSummaryQuery, useCommentsQuery, useAddCommentMutation, useRoundStatQuery
 } = api

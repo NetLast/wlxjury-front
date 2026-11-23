@@ -8,6 +8,7 @@ import 'yet-another-react-lightbox/styles.css'
 import { useHotkeys } from 'react-hotkeys-hook'
 import FallbackImg from './FallbackImg'
 import RatingControl from './RatingControl'
+import type { RoundScale } from '../auth/scale'
 import Comments from './Comments'
 import CommonsInfo from './CommonsInfo'
 import type { ImageWithRating, Role } from '../types'
@@ -16,6 +17,7 @@ interface Props {
   items: ImageWithRating[]
   index: number
   role: Role
+  scale: RoundScale
   roundId: string
   onIndex: (i: number) => void
   onClose: () => void
@@ -25,7 +27,7 @@ interface Props {
 export const myRate = (x: ImageWithRating) => x.selections[0]?.rate ?? 0
 
 /** Big photo with a thumbnail strip (wireframe): info line, rating, Commons link, comments. */
-export default function DetailView({ items, index, role, roundId, onIndex, onClose, onRate }: Props) {
+export default function DetailView({ items, index, role, scale, roundId, onIndex, onClose, onRate }: Props) {
   const theme = useTheme()
   const narrow = useMediaQuery(theme.breakpoints.down('md'))
   const [zoom, setZoom] = useState(false)
@@ -76,7 +78,8 @@ export default function DetailView({ items, index, role, roundId, onIndex, onClo
 
           <CommonsInfo title={image.title} />
           <Stack direction="row" spacing={2} sx={{ alignItems: "center", flexWrap: "wrap" }} useFlexGap>
-            <RatingControl role={role} rate={myRate(item)} onRate={(r) => onRate(image.pageId, r)} />
+            {/* an admin looks at the results and does not vote */}
+            {role !== 'admin' && <RatingControl scale={scale} rate={myRate(item)} onRate={(r) => onRate(image.pageId, r)} />}
             {image.pageUrl && (
               <Button component={Link} href={image.pageUrl} target="_blank" rel="noopener noreferrer" endIcon={<OpenInNewIcon />}>
                 Перейти на Commons
