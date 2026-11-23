@@ -6,7 +6,7 @@
 // gallery-init.js: the justified tiles' options from #gallery's attributes (views.GalleryTiles),
 // as main.scala.html's inline setup had them before.
 
-const { options, init } = require("../public/javascripts/gallery-init");
+const { options, init, islandOwns } = require("../public/javascripts/gallery-init");
 
 function gallery(attrs) {
     document.body.innerHTML = `<div id="gallery" ${attrs}></div>`;
@@ -67,6 +67,28 @@ describe("init", () => {
         expect(init(document)).toBeNull();
         gallery("");
         window.jQuery = Object.assign(() => { throw new Error("called"); }, { fn: {} });
+        expect(init(document)).toBeNull();
+    });
+});
+
+describe("the gallery island (public/gallery-island/)", () => {
+    afterEach(() => { delete window.jQuery; });
+
+    test("owns a #gallery marked data-island, unless the page asks for the old tiles", () => {
+        const el = gallery("data-island");
+        expect(islandOwns(el, "")).toBe(true);
+        expect(islandOwns(el, "?page=2")).toBe(true);
+        expect(islandOwns(el, "?tiles=classic")).toBe(false);
+        expect(islandOwns(el, "?page=2&tiles=classic")).toBe(false);
+        expect(islandOwns(el, "?tiles=classical")).toBe(true);
+        expect(islandOwns(gallery(""), "")).toBe(false);
+    });
+
+    test("init leaves an island's gallery alone", () => {
+        const $ = () => { throw new Error("unitegallery started"); };
+        $.fn = { unitegallery() {} };
+        window.jQuery = $;
+        gallery('data-island data-jury="true" data-binary="true"');
         expect(init(document)).toBeNull();
     });
 });

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="uk" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gallery island demo</title>
+  <!-- the app's own look: Bootstrap and its icons (webjars in the app), the theme and main.css -->
+  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/app-public/stylesheets/codex-theme.css">
+  <link rel="stylesheet" href="/app-public/stylesheets/theme.css">
+  <link rel="stylesheet" href="/app-public/stylesheets/main.css">
+  <script src="/app-public/javascripts/vote-errors.js"></script>
+</head>
+<body>
+  <nav class="navbar bg-body-tertiary px-3 gap-2 flex-wrap">
+    <span class="navbar-brand">Демо галереї</span>
+    <a class="btn btn-sm btn-outline-primary" href="?mode=binary">Журі: так/ні</a>
+    <a class="btn btn-sm btn-outline-primary" href="?mode=rated">Журі: 1–10 (пів зірки)</a>
+    <a class="btn btn-sm btn-outline-primary" href="?mode=org">Організатор</a>
+    <a class="btn btn-sm btn-outline-secondary" href="#" id="theme">Темна / світла</a>
+    <span class="text-body-secondary small">Оцінка 3,5★ (7) у демо відповідає «раунд закрито»</span>
+  </nav>
+  <main class="container-fluid" id="page"></main>
+  <script type="module" src="./demo.ts"></script>
+</body>
+</html>

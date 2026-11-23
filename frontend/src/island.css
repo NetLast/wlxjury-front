@@ -1,0 +1,52 @@
+/* The gallery island's tiles. Colours are the app's variables (theme.css, codex-theme.css), so
+   light and dark modes follow; the photos sit on the page's own background. */
+.wlx-island { padding: 5px 0; }
+.wlx-island .react-photo-album--photo { position: relative; overflow: hidden; border-radius: 2px; background: var(--wlx-image-bg, var(--bs-secondary-bg)); }
+
+.wlx-island-open { position: absolute; inset: 0; z-index: 0; }
+.wlx-island-open:focus-visible { outline: 3px solid var(--bs-focus-ring-color, #36c); outline-offset: -3px; }
+
+.wlx-island-caption {
+  position: absolute; inset: 0 0 auto 0; z-index: 1; padding: 4px 8px 14px; pointer-events: none;
+  color: #fff; font-size: .8rem; line-height: 1.25; text-shadow: 0 1px 2px rgb(0 0 0 / .8);
+  background: linear-gradient(rgb(0 0 0 / .7), rgb(0 0 0 / .35) 70%, transparent);
+}
+.wlx-island-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wlx-island-desc, .wlx-island-meta {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+}
+.wlx-island-meta { -webkit-line-clamp: 1; line-clamp: 1; opacity: .9; }
+/* the whole description while the tile is pointed at or holds the focus */
+.wlx-island .react-photo-album--photo:is(:hover, :focus-within) .wlx-island-caption { bottom: 0; background: rgb(0 0 0 / .72); }
+.wlx-island .react-photo-album--photo:is(:hover, :focus-within) :is(.wlx-island-desc, .wlx-island-meta) { -webkit-line-clamp: unset; line-clamp: unset; }
+
+.wlx-island-foot {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; flex-direction: column;
+  align-items: stretch; gap: 3px; pointer-events: none;
+}
+.wlx-island-chips { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 6px; }
+.wlx-island-chips:empty { display: none; }
+.wlx-island-chip { margin-bottom: 3px; padding: 0 6px; border-radius: 10px; font-size: .8rem; color: #fff; background: rgb(0 0 0 / .65); }
+.wlx-island-chip.is-selected { background: var(--wlx-selected, #14866d); }
+.wlx-island-chip.is-rejected { background: var(--wlx-rejected, #d73333); }
+
+.wlx-island-votes {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 2px; padding: 2px 4px;
+  background: rgb(0 0 0 / .65); opacity: 0; transition: opacity .15s; pointer-events: auto;
+}
+.wlx-island .react-photo-album--photo:is(:hover, :focus-within) .wlx-island-votes { opacity: 1; }
+@media (hover: none) { .wlx-island-votes { opacity: 1; } }
+
+.wlx-island-btn { border: 0; border-radius: 4px; padding: 0 5px; color: #fff; background: transparent; font-size: 1rem; line-height: 1.6; cursor: pointer; }
+.wlx-island-btn[aria-pressed="true"] { background: var(--wlx-selected, #14866d); }
+.wlx-island-reject[aria-pressed="true"] { background: var(--wlx-rejected, #d73333); }
+.wlx-island-btn:focus-visible, .wlx-island-half:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
+.wlx-island-votes[aria-busy="true"] { cursor: progress; }
+
+.wlx-island-stars { display: inline-flex; color: #ffc107; }
+.wlx-island-star { position: relative; display: inline-block; width: 1.2em; text-align: center; }
+.wlx-island-half { position: absolute; top: 0; bottom: 0; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.wlx-island-half-left { left: 0; width: 50%; }
+.wlx-island-half-right { right: 0; width: 50%; }
+.wlx-island-whole { left: 0; right: 0; }
+.wlx-island-failed { display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--bs-secondary-color); background: var(--wlx-image-bg, var(--bs-secondary-bg)); }

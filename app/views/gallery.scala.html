@@ -18,7 +18,8 @@
     @main("gallery", user, list.asUserId, Some(list.round), rounds, gallery = true, Some(list),
         pagerNav(pager, list.pageUrl), rates = rates, filters = views.html.regionMenu(regionMenu), commented = commented,
         head = play.twirl.api.HtmlFormat.fill(List(snippets.galleryScripts(),
-            snippets.tileVoteScripts(views.TileStars.round(user, list.asUserId, Some(list.round)).nonEmpty))), reappearingBar = true) {
+            snippets.tileVoteScripts(views.TileStars.round(user, list.asUserId, Some(list.round)).nonEmpty),
+            snippets.galleryIsland())), reappearingBar = true) {
 
         @defining(list.roundId) { roundId =>
 
@@ -32,7 +33,11 @@
             @* the tiles' chips, which tile-votes.js clones *@
             @snippets.chipTemplates()
 
-            <div id="gallery" class="gallery mw-gallery-traditional" style="display:none;" @views.GalleryTiles.attributes(user, list.asUserId, Some(list.round))>
+            @* data-island: the React tiles (frontend/, public/gallery-island/) take the gallery over
+               from unitegallery (gallery-init.js leaves it alone; ?tiles=classic keeps the old
+               tiles); they read the <img> elements below and the labels here *@
+            <div id="gallery" class="gallery mw-gallery-traditional" style="display:none;" @views.GalleryTiles.attributes(user, list.asUserId, Some(list.round))
+                 data-island data-label-author="@Messages("author")" data-label-monument="@Messages("monument.filter.chip", "{0}")">
 
                     @for((file, index) <- pageFiles.view.zipWithIndex) {
                         @* unitegallery shows `alt` (the caption) and `data-description` with jQuery's
@@ -51,6 +56,15 @@
                         data-roundId="@roundId"
                         data-rate="@file.rate"
                         data-largeUrl="@list.largeUrl(file.pageId)"
+                        @* the card's description (the island): the monument, which names no one, for
+                           everyone; the author and the description (which may name them) only for
+                           those who see the round's organizer views, as fileList's showAuthor and
+                           the large view's authorInfo (secure-coding.md §22) *@
+                        data-monument-id="@file.image.monumentId.getOrElse("")"
+                        @if(user != null && user.canViewOrgInfo(list.round)) {
+                        data-author="@services.imports.StoredAuthors.shown(file.image.author).getOrElse("")"
+                        data-desc="@file.image.description.getOrElse("")"
+                        }
                         @* in an order by vote time, every tile's: the time of the juror's vote, ISO 8601 in
                            UTC; "" for an unrated file, or a vote with none recorded (its text with it);
                            kept up to date by an in-page vote (tile-votes.js addVoteTime, vote-time.js) *@

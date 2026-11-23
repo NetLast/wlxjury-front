@@ -71,6 +71,13 @@ only run the app.
 
 ## Development
 
+### Gallery tiles (React)
+
+The gallery page's tiles are a React island in `frontend/`, built into `public/gallery-island/`
+(committed, so `sbt run` needs no npm). To change them: `cd frontend && npm install && npm run dev`
+opens a demo of the page without Play; `npm run build` rebuilds the files Play serves. Add
+`?tiles=classic` to a gallery's address for the old tiles. Details: [frontend/README.md](frontend/README.md).
+
 ### Auto-reloading
 Interpreted languages like Python or PHP always run the latest source code that was modified by developer. That is not the case for compiled language like Java or Scala. However Play Framework supports auto-reloading if the source code changes and you try to open some web-page again. On new http request if source code is modified, changed files will be recompiled and the application will be reloaded.
 

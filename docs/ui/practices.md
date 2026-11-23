@@ -186,6 +186,17 @@ tiles will replace the gallery later, planned with a UI developer with the other
 changes after the API is prepared; the patched copy stays until then
 ([investigation](../investigations/2026-11-04-gallery-keep-or-replace.md)).
 
+**7.1 The gallery island (in progress).** The gallery page's tiles are now React (`frontend/`,
+[frontend/README.md](../../frontend/README.md)), built into `public/gallery-island/` and loaded by
+`snippets/galleryIsland.scala.html`; `gallery-init.js` leaves a `#gallery[data-island]` to it, and
+`?tiles=classic` brings the old tiles back for comparison. The island reads only what the page
+renders (no API): the server keeps deciding what a viewer sees, e.g. a file's author and
+description only for `canViewOrgInfo` (secure-coding §22), the monument for everyone. Its texts
+come from the page (§1.1); its own guard test (`frontend/src/guard.test.ts`) keeps §2.1 and
+secure-coding §8 for its source, as the bundle sits outside `public/javascripts/`. The built files
+are committed with the source change (`npm run build`). contestFiles and the vote-time order still
+use unitegallery.
+
 ## 8. Guards
 
 | Rule | Enforced by | State |

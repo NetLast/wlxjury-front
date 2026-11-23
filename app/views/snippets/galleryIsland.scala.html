@@ -1,0 +1,7 @@
+@()
+@* The gallery island: the React tiles built from frontend/ into public/gallery-island/ (one
+   classic script, one stylesheet; no inline code). It mounts on #gallery[data-island] once the
+   page is parsed; gallery-init.js leaves that gallery to it. Goes in the shell's `head`, after
+   galleryScripts and tileVoteScripts (vote-errors.js explains a failed vote). *@
+<link rel="stylesheet" href="@routes.Assets.versioned("gallery-island/gallery-island.css")">
+<script defer src="@routes.Assets.versioned("gallery-island/gallery-island.js")"></script>

@@ -43,17 +43,25 @@
     };
   }
 
-  /** Starts the tiles on `doc`'s #gallery, if it has one; returns its options, or null. */
+  /** Whether the React tiles (public/gallery-island/) take `el` over: it is marked data-island
+    * and the page wasn't asked for the old tiles (?tiles=classic). */
+  function islandOwns(el, search) {
+    return el.hasAttribute('data-island') && !/(?:^|[?&])tiles=classic(?:&|$)/.test(search || '');
+  }
+
+  /** Starts the tiles on `doc`'s #gallery, if it has one and the island doesn't own it; returns
+    * its options, or null. */
   function init(doc) {
     var el = doc.getElementById('gallery');
     if (!el || !window.jQuery || !window.jQuery.fn.unitegallery) return null;
+    if (islandOwns(el, doc.location ? doc.location.search : '')) return null;
     var opts = options(el);
     window.jQuery(el).unitegallery(opts);
     return opts;
   }
 
   if (typeof module !== 'undefined') {
-    module.exports = { options: options, init: init };
+    module.exports = { options: options, init: init, islandOwns: islandOwns };
   } else {
     window.jQuery(function () { init(document); });
   }
