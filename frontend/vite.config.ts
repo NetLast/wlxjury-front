@@ -40,7 +40,7 @@ function demoAssets(): Plugin {
         const pub = /^\/app-public\/((?:javascripts|stylesheets)\/[\w.-]+\.(?:js|css))$/.exec(url)
         if (pub) {
           res.setHeader('Content-Type', pub[1].endsWith('.css') ? 'text/css' : 'text/javascript')
-          res.end(readFileSync(resolve(__dirname, '../public', pub[1])))
+          res.end(readFileSync(resolve(import.meta.dirname, '../public', pub[1])))
           return
         }
         const t = /^\/thumbs\/(\d+)x(\d+)\/(\d+)px-Photo_(\d+)\.jpg$/.exec(url)
