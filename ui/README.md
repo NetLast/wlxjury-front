@@ -6,6 +6,8 @@ It talks to the Sangria GraphQL endpoint (`POST /graphql`); the Scala backend is
 Every query is checked by a test against the backend's own schema (`conf/graphql/schema.graphql`,
 copied to `ui/schema/`: refresh the copy when the schema changes).
 
+**Requires Node.js 20.19+ or 22.12+ (an LTS release; odd versions such as 21 are too old for Vite 8).**
+
 ## Run without the backend (demo data)
 
 ```bash
