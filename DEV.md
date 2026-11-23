@@ -19,8 +19,8 @@ Both scripts install `ui/node_modules` on first run if missing, start the Vite d
 ```
 
 - Play (HTML pages): [http://localhost:9000](http://localhost:9000)
-- Tapir REST API + Swagger UI: [http://localhost:9001/api/contests](http://localhost:9001/api/contests) · [http://localhost:9001/api/docs](http://localhost:9001/api/docs)
-- React UI (hot-reload, proxies /api to 9001): [http://localhost:5173](http://localhost:5173)
+- Tapir REST API + Swagger UI (Play, same port): [http://localhost:9000/api/contests](http://localhost:9000/api/contests) · [http://localhost:9000/api/docs](http://localhost:9000/api/docs)
+- React UI (hot-reload, proxies /api and /graphql to 9000): [http://localhost:5173](http://localhost:5173)
 
 **Running manually (if you need separate terminals):**
 
